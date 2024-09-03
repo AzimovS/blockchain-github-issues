@@ -1,7 +1,7 @@
 "use server";
 
 // This script assumes you have a list of GitHub organizations
-const organizations = ["ethereum"]; // Replace with your GitHub organizations
+const organizations = ["scaffold-eth"]; // Replace with your GitHub organizations
 
 const GITHUB_API_BASE_URL = "https://api.github.com";
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN; // It's safer to use environment variables for tokens
@@ -59,9 +59,6 @@ export async function fetchIssuesFromOrgs() {
         try {
           const issues = await getIssues(org, repo.name);
           console.log(`Found ${issues.length} issues in repository ${repo.name} of organization ${org}`);
-          if (repo?.name !== "ethereum-org-website") {
-            continue;
-          }
           // Process each issue
           issues.forEach((issue: any) => {
             // console.log(issue);
@@ -78,7 +75,9 @@ export async function fetchIssuesFromOrgs() {
             console.log(`Repository: ${repo.name}`);
             console.log(`Repository Full name: ${org}/${repo.name}`);
             console.log(`Author association: ${issue.author_association}`);
-
+            console.log(`Repo Forks count: ${repo.forks_count}`);
+            console.log(`Repo Stars count: ${repo.stargazers_count}`);
+            console.log(`Repo Language: ${repo.language}`);
             console.log("---");
           });
         } catch (error) {
