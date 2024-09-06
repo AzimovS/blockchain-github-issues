@@ -1,5 +1,8 @@
 "use server";
 
+import connectdb from "~~/lib/db";
+import Issue from "~~/lib/models/Issue";
+
 // This script assumes you have a list of GitHub organizations
 const organizations = ["scaffold-eth"]; // Replace with your GitHub organizations
 
@@ -8,6 +11,7 @@ const GITHUB_TOKEN = process.env.GITHUB_TOKEN; // It's safer to use environment 
 
 // Utility function to handle GitHub API requests
 async function githubApiRequest(url: string) {
+  await connectdb();
   let results: any = [];
   let page = 1;
   let hasMore = true;
@@ -50,6 +54,8 @@ async function getIssues(org: string, repo: string) {
 
 // Main function to iterate over organizations and fetch repositories and issues
 export async function fetchIssuesFromOrgs() {
+  const currentDate = new Date();
+
   for (const org of organizations) {
     try {
       const repos = await getRepositories(org);
@@ -60,11 +66,29 @@ export async function fetchIssuesFromOrgs() {
           const issues = await getIssues(org, repo.name);
           console.log(`Found ${issues.length} issues in repository ${repo.name} of organization ${org}`);
           // Process each issue
-          issues.forEach((issue: any) => {
+          issues.forEach(async (issue: any) => {
             // console.log(issue);
             if (issue?.pull_request) {
               return;
             }
+            const newIssue = new Issue({
+              number: issue.number,
+              title: issue.title,
+              assignee: issue.assignees.map((assignee: any) => assignee.name).join(", "),
+              createdAt: issue.createdAt,
+              updatedAt: issue.updatedAt,
+              state: issue.state,
+              htmlUrl: issue?.html_url,
+              repoName: repo?.name,
+              authorAssociation: issue?.author_association,
+              forksCount: repo?.forks_count,
+              stargazersCount: repo?.stargazers_count,
+              languages: repo?.language,
+              savedAt: currentDate,
+            });
+
+            await newIssue.save();
+            console.log(`Saved at: ${currentDate}`);
             console.log(`Issue #${issue.number}: ${issue.title}`);
             console.log(`Labels: ${issue.labels.map((label: any) => label.name).join(", ")}`);
             console.log(`Assignee: ${issue.assignees.map((assignee: any) => assignee.name).join(", ")}`);
@@ -79,6 +103,7 @@ export async function fetchIssuesFromOrgs() {
             console.log(`Repo Stars count: ${repo.stargazers_count}`);
             console.log(`Repo Language: ${repo.language}`);
             console.log("---");
+            return;
           });
         } catch (error) {
           console.error(`Error fetching issues for repo ${repo.name}:`, error);

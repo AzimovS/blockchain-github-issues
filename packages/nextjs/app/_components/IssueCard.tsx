@@ -20,7 +20,7 @@ const IssueCard: React.FC<IssueCardProps> = ({ title, repo, date, labels, langua
         ))}
       </div>
       <div className="flex flex-wrap gap-2">
-        {languages.map((lang, i) => (
+        {languages?.map((lang, i) => (
           <span key={i} className="bg-blue-100 text-xs px-2 py-1 rounded">
             {lang}
           </span>
