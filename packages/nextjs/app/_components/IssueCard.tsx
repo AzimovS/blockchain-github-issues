@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Issue } from "~~/types/issue/issue";
 
 interface IssueCardProps {
@@ -19,8 +20,17 @@ function formatTimeDifference(dateString: string): string {
 const IssueCard: React.FC<IssueCardProps> = ({ issue }) => {
   return (
     <div className="bg-white p-4 rounded shadow">
-      <h3 className="text-red-700 font-semibold mb-1">{issue?.title}</h3>
-      <p className="text-sm text-gray-600 mb-2">Repository: {issue?.repoName}</p>
+      <h3 className="text-red-700 font-semibold mb-1">
+        <Link href={issue?.htmlUrl} rel="noopener noreferrer" target="_blank">
+          {issue?.title}
+        </Link>
+      </h3>
+      <p className="text-sm text-gray-600 mb-2">
+        Repository:{" "}
+        <Link href={issue?.repoUrl} rel="noopener noreferrer" target="_blank">
+          {issue?.repoName}
+        </Link>
+      </p>
       <p className="text-sm text-gray-600 mb-2">{formatTimeDifference(issue?.createdAt as string)}</p>
       <div className="flex flex-wrap gap-2 mb-2">
         {issue?.labels.map((label: string, i: number) => (

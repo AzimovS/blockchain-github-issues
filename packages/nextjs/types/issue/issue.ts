@@ -14,4 +14,5 @@ export interface Issue {
   forksCount: string;
   stargazersCount: string;
   languages: string[];
+  repoUrl: string;
 }

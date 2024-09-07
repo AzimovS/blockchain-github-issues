@@ -62,6 +62,7 @@ export async function fetchIssuesFromOrgs() {
       console.log(`Found ${repos.length} repositories for organization ${org}`);
 
       for (const repo of repos) {
+        if (repo?.archived) continue;
         try {
           const issues = await getIssues(org, repo.name);
           console.log(`Found ${issues.length} issues in repository ${repo.name} of organization ${org}`);
@@ -85,24 +86,25 @@ export async function fetchIssuesFromOrgs() {
               stargazersCount: repo?.stargazers_count,
               languages: repo?.language,
               savedAt: currentDate,
+              repoUrl: repo?.html_url,
             });
 
             await newIssue.save();
             console.log(`Saved at: ${currentDate}`);
             console.log(`Issue #${issue.number}: ${issue.title}`);
-            console.log(`Labels: ${issue.labels.map((label: any) => label.name).join(", ")}`);
-            console.log(`Assignee: ${issue.assignees.map((assignee: any) => assignee.name).join(", ")}`);
-            console.log(`Created at: ${issue.created_at}`);
-            console.log(`Updated at: ${issue.updated_at}`);
-            console.log(`State: ${issue.state}`);
-            console.log(`URL: ${issue.html_url}`);
-            console.log(`Repository: ${repo.name}`);
-            console.log(`Repository Full name: ${org}/${repo.name}`);
-            console.log(`Author association: ${issue.author_association}`);
-            console.log(`Repo Forks count: ${repo.forks_count}`);
-            console.log(`Repo Stars count: ${repo.stargazers_count}`);
-            console.log(`Repo Language: ${repo.language}`);
-            console.log("---");
+            // console.log(`Labels: ${issue.labels.map((label: any) => label.name).join(", ")}`);
+            // console.log(`Assignee: ${issue.assignees.map((assignee: any) => assignee.name).join(", ")}`);
+            // console.log(`Created at: ${issue.created_at}`);
+            // console.log(`Updated at: ${issue.updated_at}`);
+            // console.log(`State: ${issue.state}`);
+            // console.log(`URL: ${issue.html_url}`);
+            // console.log(`Repository: ${repo.name}`);
+            // console.log(`Repository Full name: ${org}/${repo.name}`);
+            // console.log(`Author association: ${issue.author_association}`);
+            // console.log(`Repo Forks count: ${repo.forks_count}`);
+            // console.log(`Repo Stars count: ${repo.stargazers_count}`);
+            // console.log(`Repo Language: ${repo.language}`);
+            // console.log("---");
             return;
           });
         } catch (error) {
