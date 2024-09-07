@@ -18,10 +18,10 @@ const issueSchema = new mongoose.Schema(
       default: [],
     },
     createdAt: {
-      type: String,
+      type: Date,
     },
     updatedAt: {
-      type: String,
+      type: Date,
     },
     savedAt: {
       type: Date,

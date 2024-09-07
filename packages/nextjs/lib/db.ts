@@ -17,7 +17,7 @@ const connectdb = async () => {
 
   try {
     await mongoose.connect(MONGODB_URI, {
-      dbName: "doodleExchange",
+      dbName: "blockchainIssues",
       bufferCommands: false,
     });
     console.log("Connected");

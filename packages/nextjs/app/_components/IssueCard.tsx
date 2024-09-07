@@ -1,26 +1,36 @@
+import { Issue } from "~~/types/issue/issue";
+
 interface IssueCardProps {
-  title: string;
-  repo: string;
-  date: string;
-  labels: string[];
-  languages: string[];
+  issue: Issue;
 }
 
-const IssueCard: React.FC<IssueCardProps> = ({ title, repo, date, labels, languages }) => {
+function formatTimeDifference(dateString: string): string {
+  const givenDate: Date = new Date(dateString);
+  const currentDate: Date = new Date();
+
+  const timeDifference: number = currentDate.getTime() - givenDate.getTime();
+  const hoursAgo: number = Math.floor(timeDifference / (1000 * 60 * 60));
+
+  const options: Intl.DateTimeFormatOptions = { year: "numeric", month: "long", day: "numeric" };
+  const formattedDate: string = givenDate.toLocaleDateString("en-US", options);
+
+  return `${formattedDate} (${hoursAgo} hours ago)`;
+}
+const IssueCard: React.FC<IssueCardProps> = ({ issue }) => {
   return (
     <div className="bg-white p-4 rounded shadow">
-      <h3 className="text-red-700 font-semibold mb-1">{title}</h3>
-      <p className="text-sm text-gray-600 mb-2">Repository: {repo}</p>
-      <p className="text-sm text-gray-600 mb-2">{date}</p>
+      <h3 className="text-red-700 font-semibold mb-1">{issue?.title}</h3>
+      <p className="text-sm text-gray-600 mb-2">Repository: {issue?.repoName}</p>
+      <p className="text-sm text-gray-600 mb-2">{formatTimeDifference(issue?.createdAt as string)}</p>
       <div className="flex flex-wrap gap-2 mb-2">
-        {labels.map((label, i) => (
+        {issue?.labels.map((label: string, i: number) => (
           <span key={i} className="bg-gray-200 text-xs px-2 py-1 rounded">
             {label}
           </span>
         ))}
       </div>
       <div className="flex flex-wrap gap-2">
-        {languages?.map((lang, i) => (
+        {issue?.languages?.map((lang: string, i: number) => (
           <span key={i} className="bg-blue-100 text-xs px-2 py-1 rounded">
             {lang}
           </span>

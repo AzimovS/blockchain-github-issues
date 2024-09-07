@@ -75,8 +75,8 @@ export async function fetchIssuesFromOrgs() {
               number: issue.number,
               title: issue.title,
               assignee: issue.assignees.map((assignee: any) => assignee.name).join(", "),
-              createdAt: issue.createdAt,
-              updatedAt: issue.updatedAt,
+              createdAt: new Date(issue.created_at),
+              updatedAt: new Date(issue.updated_at),
               state: issue.state,
               htmlUrl: issue?.html_url,
               repoName: repo?.name,
@@ -93,7 +93,7 @@ export async function fetchIssuesFromOrgs() {
             console.log(`Labels: ${issue.labels.map((label: any) => label.name).join(", ")}`);
             console.log(`Assignee: ${issue.assignees.map((assignee: any) => assignee.name).join(", ")}`);
             console.log(`Created at: ${issue.created_at}`);
-            console.log(`Created at: ${issue.updated_at}`);
+            console.log(`Updated at: ${issue.updated_at}`);
             console.log(`State: ${issue.state}`);
             console.log(`URL: ${issue.html_url}`);
             console.log(`Repository: ${repo.name}`);
