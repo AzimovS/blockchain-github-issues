@@ -4,7 +4,7 @@ import connectdb from "~~/lib/db";
 import Issue from "~~/lib/models/Issue";
 
 // This script assumes you have a list of GitHub organizations
-const organizations = ["scaffold-eth", "BuidlGuidl"]; // Replace with your GitHub organizations
+const organizations = ["scaffold-eth", "BuidlGuidl", "ethereum-optimism"]; // Replace with your GitHub organizations
 
 const GITHUB_API_BASE_URL = "https://api.github.com";
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN; // It's safer to use environment variables for tokens
@@ -52,6 +52,17 @@ async function getIssues(org: string, repo: string) {
   return githubApiRequest(url);
 }
 
+function isLessThan90Days(date1: Date, date2: Date): boolean {
+  // Calculate the difference in milliseconds
+  const diffInMs: number = Math.abs(date2.getTime() - date1.getTime());
+
+  // Convert milliseconds to days
+  const diffInDays: number = diffInMs / (1000 * 60 * 60 * 24);
+
+  // Return true if the difference is less than 90 days
+  return diffInDays < 90;
+}
+
 // Main function to iterate over organizations and fetch repositories and issues
 export async function fetchIssuesFromOrgs() {
   const currentDate = new Date();
@@ -63,6 +74,7 @@ export async function fetchIssuesFromOrgs() {
 
       for (const repo of repos) {
         if (repo?.archived) continue;
+        if (!isLessThan90Days(currentDate, new Date(repo?.pushed_at))) continue;
         try {
           const issues = await getIssues(org, repo.name);
           console.log(`Found ${issues.length} issues in repository ${repo.name} of organization ${org}`);
@@ -75,7 +87,7 @@ export async function fetchIssuesFromOrgs() {
             const newIssue = new Issue({
               number: issue.number,
               title: issue.title,
-              assignee: issue.assignees.map((assignee: any) => assignee.name).join(", "),
+              assignee: issue.assignee?.login,
               createdAt: new Date(issue.created_at),
               updatedAt: new Date(issue.updated_at),
               state: issue.state,

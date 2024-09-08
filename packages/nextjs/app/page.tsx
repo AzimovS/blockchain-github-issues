@@ -16,6 +16,7 @@ interface FilterValues {
 const Home: NextPage = () => {
   const [issues, setIssues] = useState<Issue[]>([]);
   const [filteredIssues, setFilteredIssues] = useState<Issue[]>([]);
+  const [withoutAssignee, setWithoutAssignee] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -27,32 +28,34 @@ const Home: NextPage = () => {
     fetchData();
   }, []);
 
-  console.log(issues);
-
   const filterValues: FilterValues = { language: "", label: "" };
 
-  useEffect(() => {
-    const filteredValues = issues.filter((issue: Issue) => issue?.languages?.includes(filterValues?.language));
-    console.log(filteredValues);
-  }, [filterValues]);
-
   const handleChange = (filterKey: string, newVal: string) => {
-    let filteredValues = issues;
-    if (filterKey in filterValues) {
+    let filteredIssues = issues;
+    if (filterKey === "assignee") {
+      if (!withoutAssignee) {
+        setWithoutAssignee(true);
+        filteredIssues = issues.filter((issue: Issue) => !issue?.assignee);
+      } else {
+        setWithoutAssignee(false);
+      }
+    } else if (filterKey in filterValues) {
       filterValues[filterKey as keyof FilterValues] = newVal;
     }
     if (filterValues?.language) {
-      filteredValues = issues.filter((issue: Issue) => issue?.languages?.includes(filterValues?.language));
+      filteredIssues = issues.filter((issue: Issue) => issue?.languages?.includes(filterValues?.language));
     }
     if (filterValues?.label) {
-      filteredValues = issues.filter((issue: Issue) => issue?.labels?.includes(filterValues?.label));
+      filteredIssues = issues.filter((issue: Issue) => issue?.labels?.includes(filterValues?.label));
     }
-    setFilteredIssues(filteredValues);
+    setFilteredIssues(filteredIssues);
+    console.log(filteredIssues);
+    console.log(filterValues, withoutAssignee);
   };
 
   return (
     <>
-      <div className="flex items-center flex-col flex-grow pt-10">
+      <div className="flex items-center flex-col">
         <button className="btn btn-primary" onClick={() => fetchIssuesFromOrgs()}>
           HI
         </button>

@@ -17,7 +17,7 @@ const IssueCard: React.FC<IssueCardProps> = ({ issue }) => {
       <p className="text-sm text-gray-600 my-1">
         Repository:{" "}
         <Link href={issue?.repoUrl} rel="noopener noreferrer" target="_blank">
-          {issue?.repoName}
+          {issue?.org}/{issue?.repoName}
         </Link>
       </p>
       <p className="text-sm text-gray-600 my-0.5">{formatTimeDifference(issue?.createdAt as string)}</p>

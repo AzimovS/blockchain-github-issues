@@ -28,7 +28,13 @@ const FilterBar: React.FC<FilterBarProps> = ({ issues, handleChange }) => {
         </div>
         <div className="mt-4">
           <label className="flex items-center">
-            <input type="checkbox" className="mr-2" />
+            <input
+              type="checkbox"
+              className="mr-2"
+              onClick={() => {
+                handleChange("assignee", "");
+              }}
+            />
             <span className="text-sm">Only show issues with no assignee</span>
           </label>
         </div>

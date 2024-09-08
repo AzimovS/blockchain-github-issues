@@ -15,4 +15,5 @@ export interface Issue {
   stargazersCount: string;
   languages: string[];
   repoUrl: string;
+  org: string;
 }
