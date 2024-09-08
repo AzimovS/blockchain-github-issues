@@ -1,22 +1,11 @@
 import Link from "next/link";
 import { Issue } from "~~/types/issue/issue";
+import { formatTimeDifference } from "~~/utils/helpers";
 
 interface IssueCardProps {
   issue: Issue;
 }
 
-function formatTimeDifference(dateString: string): string {
-  const givenDate: Date = new Date(dateString);
-  const currentDate: Date = new Date();
-
-  const timeDifference: number = currentDate.getTime() - givenDate.getTime();
-  const hoursAgo: number = Math.floor(timeDifference / (1000 * 60 * 60));
-
-  const options: Intl.DateTimeFormatOptions = { year: "numeric", month: "long", day: "numeric" };
-  const formattedDate: string = givenDate.toLocaleDateString("en-US", options);
-
-  return `${formattedDate} (${hoursAgo} hours ago)`;
-}
 const IssueCard: React.FC<IssueCardProps> = ({ issue }) => {
   return (
     <div className="bg-white p-4 rounded shadow">
@@ -37,7 +26,7 @@ const IssueCard: React.FC<IssueCardProps> = ({ issue }) => {
       <p className="text-sm text-gray-600 my-0.5">Assignee: {issue?.assignee || ""}</p>
       <div className="flex flex-wrap gap-2 mb-2">
         {issue?.labels.map((label: string, i: number) => (
-          <span key={i} className="bg-gray-200 text-xs px-2 py-1 rounded">
+          <span key={i} className="bg-gray-200 text-xs px-2 py-1 rounded-xl">
             {label}
           </span>
         ))}
@@ -45,7 +34,7 @@ const IssueCard: React.FC<IssueCardProps> = ({ issue }) => {
       <div className="flex flex-wrap gap-2">
         <p className="text-sm text-gray-600 my-0.5">Repo Language: </p>
         {issue?.languages?.map((lang: string, i: number) => (
-          <span key={i} className="bg-blue-100 text-xs px-2 py-1 rounded">
+          <span key={i} className="bg-blue-100 text-xs px-2 py-1 rounded-xl">
             {lang}
           </span>
         ))}
