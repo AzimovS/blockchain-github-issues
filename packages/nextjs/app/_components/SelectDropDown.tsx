@@ -17,9 +17,6 @@ const SelectDropdown: React.FC<SelectDropdownProps> = ({ filterOptions, defaultO
 
   return (
     <div className="flex flex-col space-y-2">
-      <label htmlFor="filterDropdown" className="sr-only">
-        Filter by Language
-      </label>
       <select
         id="filterDropdown"
         className="select select-bordered rounded-lg w-full text-md"

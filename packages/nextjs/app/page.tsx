@@ -10,6 +10,7 @@ import { getIssues } from "~~/utils/getIssues";
 
 interface FilterValues {
   language: string;
+  label: string;
 }
 
 const Home: NextPage = () => {
@@ -28,7 +29,7 @@ const Home: NextPage = () => {
 
   console.log(issues);
 
-  const filterValues: FilterValues = { language: "" };
+  const filterValues: FilterValues = { language: "", label: "" };
 
   useEffect(() => {
     const filteredValues = issues.filter((issue: Issue) => issue?.languages?.includes(filterValues?.language));
@@ -37,12 +38,14 @@ const Home: NextPage = () => {
 
   const handleChange = (filterKey: string, newVal: string) => {
     let filteredValues = issues;
-    console.log(filterKey, newVal);
     if (filterKey in filterValues) {
       filterValues[filterKey as keyof FilterValues] = newVal;
     }
     if (filterValues?.language) {
       filteredValues = issues.filter((issue: Issue) => issue?.languages?.includes(filterValues?.language));
+    }
+    if (filterValues?.label) {
+      filteredValues = issues.filter((issue: Issue) => issue?.labels?.includes(filterValues?.label));
     }
     setFilteredIssues(filteredValues);
   };

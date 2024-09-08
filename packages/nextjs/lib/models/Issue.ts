@@ -49,6 +49,9 @@ const issueSchema = new mongoose.Schema(
     repoUrl: {
       type: String,
     },
+    org: {
+      type: String,
+    },
   },
   { timestamps: true },
 );

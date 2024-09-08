@@ -9,7 +9,7 @@ interface IssueCardProps {
 const IssueCard: React.FC<IssueCardProps> = ({ issue }) => {
   return (
     <div className="bg-white p-4 rounded shadow">
-      <h3 className="text-red-700 font-semibold mb-1">
+      <h3 className="font-semibold mb-1">
         <Link href={issue?.htmlUrl} rel="noopener noreferrer" target="_blank">
           {issue?.title}
         </Link>
@@ -24,13 +24,16 @@ const IssueCard: React.FC<IssueCardProps> = ({ issue }) => {
       <p className="text-sm text-gray-600 my-0.5">Stars: {issue?.stargazersCount}</p>
       <p className="text-sm text-gray-600 my-0.5">Forks: {issue?.forksCount}</p>
       <p className="text-sm text-gray-600 my-0.5">Assignee: {issue?.assignee || ""}</p>
-      <div className="flex flex-wrap gap-2 mb-2">
-        {issue?.labels.map((label: string, i: number) => (
-          <span key={i} className="bg-gray-200 text-xs px-2 py-1 rounded-xl">
-            {label}
-          </span>
-        ))}
-      </div>
+      {issue?.labels?.length > 0 && (
+        <div className="flex flex-wrap gap-2 mb-2">
+          <p className="text-sm text-gray-600 my-0.5">Labels: </p>
+          {issue?.labels.map((label: string, i: number) => (
+            <span key={i} className="bg-gray-200 text-xs px-2 py-1 rounded-xl">
+              {label}
+            </span>
+          ))}
+        </div>
+      )}
       <div className="flex flex-wrap gap-2">
         <p className="text-sm text-gray-600 my-0.5">Repo Language: </p>
         {issue?.languages?.map((lang: string, i: number) => (

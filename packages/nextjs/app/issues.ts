@@ -4,7 +4,7 @@ import connectdb from "~~/lib/db";
 import Issue from "~~/lib/models/Issue";
 
 // This script assumes you have a list of GitHub organizations
-const organizations = ["scaffold-eth"]; // Replace with your GitHub organizations
+const organizations = ["scaffold-eth", "BuidlGuidl"]; // Replace with your GitHub organizations
 
 const GITHUB_API_BASE_URL = "https://api.github.com";
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN; // It's safer to use environment variables for tokens
@@ -87,6 +87,8 @@ export async function fetchIssuesFromOrgs() {
               languages: repo?.language,
               savedAt: currentDate,
               repoUrl: repo?.html_url,
+              org: org,
+              labels: issue?.labels?.map((label: any) => label.name),
             });
 
             await newIssue.save();
