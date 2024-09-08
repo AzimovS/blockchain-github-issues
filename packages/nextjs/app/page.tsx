@@ -17,6 +17,7 @@ const Home: NextPage = () => {
   const [issues, setIssues] = useState<Issue[]>([]);
   const [filteredIssues, setFilteredIssues] = useState<Issue[]>([]);
   const [withoutAssignee, setWithoutAssignee] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -26,11 +27,13 @@ const Home: NextPage = () => {
     };
 
     fetchData();
+    setIsLoading(false);
   }, []);
 
   const filterValues: FilterValues = { language: "", label: "" };
 
   const handleChange = (filterKey: string, newVal: string) => {
+    setIsLoading(true);
     let filteredIssues = issues;
     if (filterKey === "assignee") {
       if (!withoutAssignee) {
@@ -51,24 +54,31 @@ const Home: NextPage = () => {
     setFilteredIssues(filteredIssues);
     console.log(filteredIssues);
     console.log(filterValues, withoutAssignee);
+    setIsLoading(false);
   };
 
   return (
     <>
-      <div className="flex items-center flex-col">
-        <button className="btn btn-primary" onClick={() => fetchIssuesFromOrgs()}>
-          HI
-        </button>
-        <button className="btn btn-primary" onClick={() => getIssues()}>
-          mongotest
-        </button>
-      </div>
       <div className="p-6 font-sans">
-        <FilterBar issues={issues} handleChange={handleChange} />
-        <div className="space-y-4">
-          {filteredIssues.length > 0 &&
-            filteredIssues.map((issue: Issue, index: number) => <IssueCard key={index} issue={issue} />)}
+        <div className="flex items-center flex-col">
+          <button className="btn btn-primary" onClick={() => fetchIssuesFromOrgs()}>
+            HI
+          </button>
+          <button className="btn btn-primary" onClick={() => getIssues()}>
+            mongotest
+          </button>
         </div>
+        <FilterBar issues={issues} handleChange={handleChange} />
+        {isLoading ? (
+          <div className="flex justify-center mt-10">
+            <span className="loading loading-spinner loading-lg "></span>
+          </div>
+        ) : (
+          <div className="space-y-4">
+            {filteredIssues.length > 0 &&
+              filteredIssues.map((issue: Issue, index: number) => <IssueCard key={index} issue={issue} />)}
+          </div>
+        )}
       </div>
     </>
   );
