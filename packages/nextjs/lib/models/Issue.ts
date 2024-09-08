@@ -14,8 +14,7 @@ const issueSchema = new mongoose.Schema(
       type: [String],
     },
     assignee: {
-      type: [String],
-      default: [],
+      type: String,
     },
     createdAt: {
       type: Date,

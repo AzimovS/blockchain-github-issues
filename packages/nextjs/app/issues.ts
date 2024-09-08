@@ -90,8 +90,8 @@ export async function fetchIssuesFromOrgs() {
             });
 
             await newIssue.save();
-            console.log(`Saved at: ${currentDate}`);
-            console.log(`Issue #${issue.number}: ${issue.title}`);
+            // console.log(`Saved at: ${currentDate}`);
+            // console.log(`Issue #${issue.number}: ${issue.title}`);
             // console.log(`Labels: ${issue.labels.map((label: any) => label.name).join(", ")}`);
             // console.log(`Assignee: ${issue.assignees.map((assignee: any) => assignee.name).join(", ")}`);
             // console.log(`Created at: ${issue.created_at}`);

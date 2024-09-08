@@ -3,7 +3,7 @@ export interface Issue {
   number: number;
   title: string;
   labels: string[];
-  assignee: string[];
+  assignee: string;
   createdAt: string;
   updatedAt: string;
   savedAt: string;
