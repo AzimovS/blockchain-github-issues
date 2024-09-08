@@ -8,7 +8,7 @@ interface IssueCardProps {
 
 const IssueCard: React.FC<IssueCardProps> = ({ issue }) => {
   return (
-    <div className="bg-white p-4 rounded shadow">
+    <div className="p-4 rounded border-2 shadow">
       <h3 className="font-semibold mb-1">
         <Link href={issue?.htmlUrl} rel="noopener noreferrer" target="_blank">
           {issue?.title}
@@ -28,7 +28,7 @@ const IssueCard: React.FC<IssueCardProps> = ({ issue }) => {
         <div className="flex flex-wrap gap-2 mb-2">
           <p className="text-sm text-gray-600 my-0.5">Labels: </p>
           {issue?.labels.map((label: string, i: number) => (
-            <span key={i} className="bg-gray-200 text-xs px-2 py-1 rounded-xl">
+            <span key={i} className="bg-gray-400 text-xs px-2 py-1 rounded-xl">
               {label}
             </span>
           ))}
