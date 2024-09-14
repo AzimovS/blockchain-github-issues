@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import FilterBar from "./_components/FilterBar";
 import IssueCard from "./_components/IssueCard";
+import Pagination from "./_components/Pagination";
 import { checkRateLimit, fetchIssuesFromOrgs } from "./issues";
 import type { NextPage } from "next";
 import { Issue } from "~~/types/issue/issue";
@@ -18,10 +19,18 @@ const Home: NextPage = () => {
   const [filteredIssues, setFilteredIssues] = useState<Issue[]>([]);
   const [withoutAssignee, setWithoutAssignee] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages] = useState(5);
+
+  const handlePageChange = (page: number) => {
+    if (page >= 1 && page <= totalPages) {
+      setCurrentPage(page);
+    }
+  };
 
   useEffect(() => {
     const fetchData = async () => {
-      const issues = await getIssues();
+      const issues = await getIssues({ page: 1 });
       console.log(issues);
       setIssues(issues);
       setFilteredIssues(issues);
@@ -78,6 +87,7 @@ const Home: NextPage = () => {
           <div className="space-y-4">
             {filteredIssues.length > 0 &&
               filteredIssues.map((issue: Issue, index: number) => <IssueCard key={index} issue={issue} />)}
+            <Pagination currentPage={currentPage} totalPages={totalPages} handlePageChange={handlePageChange} />
           </div>
         )}
       </div>
