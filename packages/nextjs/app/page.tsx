@@ -30,8 +30,7 @@ const Home: NextPage = () => {
   };
 
   const fetchIssues = async (page: number, getTotalPages: boolean) => {
-    const issuesData = await getIssues({ page: page });
-    console.log(issues);
+    const issuesData = await getIssues({ page: page - 1 });
     setIssues(issuesData?.latestIssues);
     setFilteredIssues(issuesData?.latestIssues);
     if (getTotalPages) {
@@ -42,12 +41,14 @@ const Home: NextPage = () => {
   useEffect(() => {
     fetchIssues(1, true);
     setIsLoading(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
     setIsLoading(true);
     fetchIssues(currentPage, false);
     setIsLoading(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPage]);
 
   const filterValues: FilterValues = { language: "", label: "" };
