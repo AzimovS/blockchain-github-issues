@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import FilterBar from "./_components/FilterBar";
 import IssueCard from "./_components/IssueCard";
-import { fetchIssuesFromOrgs } from "./issues";
+import { checkRateLimit, fetchIssuesFromOrgs } from "./issues";
 import type { NextPage } from "next";
 import { Issue } from "~~/types/issue/issue";
 import { getIssues } from "~~/utils/getIssues";
@@ -22,6 +22,7 @@ const Home: NextPage = () => {
   useEffect(() => {
     const fetchData = async () => {
       const issues = await getIssues();
+      console.log(issues);
       setIssues(issues);
       setFilteredIssues(issues);
     };
@@ -64,8 +65,8 @@ const Home: NextPage = () => {
           <button className="btn btn-primary" onClick={() => fetchIssuesFromOrgs()}>
             HI
           </button>
-          <button className="btn btn-primary" onClick={() => getIssues()}>
-            mongotest
+          <button className="btn btn-primary" onClick={() => checkRateLimit()}>
+            Rate limit
           </button>
         </div>
         <FilterBar issues={issues} handleChange={handleChange} />

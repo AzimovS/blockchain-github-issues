@@ -7,6 +7,6 @@ import Issue from "~~/lib/models/Issue";
 export async function getIssues() {
   await connectdb();
   const latestIssue = await Issue.findOne().sort({ savedAt: -1 }).exec();
-  const latestIssues = await Issue.find({ savedAt: latestIssue?.savedAt });
+  const latestIssues = await Issue.find({ savedAt: latestIssue?.savedAt }).sort({ createdAt: -1 });
   return JSON.parse(JSON.stringify(latestIssues));
 }
