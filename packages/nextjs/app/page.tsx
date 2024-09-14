@@ -7,6 +7,7 @@ import Pagination from "./_components/Pagination";
 import { checkRateLimit, fetchIssuesFromOrgs } from "./issues";
 import type { NextPage } from "next";
 import { Issue } from "~~/types/issue/issue";
+import { ITEMS_PER_PAGE } from "~~/utils/const";
 import { getIssues } from "~~/utils/getIssues";
 
 interface FilterValues {
@@ -20,7 +21,7 @@ const Home: NextPage = () => {
   const [withoutAssignee, setWithoutAssignee] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages] = useState(5);
+  const [totalPages, setTotalPages] = useState(5);
 
   const handlePageChange = (page: number) => {
     if (page >= 1 && page <= totalPages) {
@@ -28,17 +29,26 @@ const Home: NextPage = () => {
     }
   };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const issues = await getIssues({ page: 1 });
-      console.log(issues);
-      setIssues(issues);
-      setFilteredIssues(issues);
-    };
+  const fetchIssues = async (page: number, getTotalPages: boolean) => {
+    const issuesData = await getIssues({ page: page });
+    console.log(issues);
+    setIssues(issuesData?.latestIssues);
+    setFilteredIssues(issuesData?.latestIssues);
+    if (getTotalPages) {
+      setTotalPages(Math.ceil(issuesData?.totalItems / ITEMS_PER_PAGE));
+    }
+  };
 
-    fetchData();
+  useEffect(() => {
+    fetchIssues(1, true);
     setIsLoading(false);
   }, []);
+
+  useEffect(() => {
+    setIsLoading(true);
+    fetchIssues(currentPage, false);
+    setIsLoading(false);
+  }, [currentPage]);
 
   const filterValues: FilterValues = { language: "", label: "" };
 
