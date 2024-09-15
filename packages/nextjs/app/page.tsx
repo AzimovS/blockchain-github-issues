@@ -4,11 +4,9 @@ import { useEffect, useState } from "react";
 import FilterBar from "./_components/FilterBar";
 import IssueCard from "./_components/IssueCard";
 import Pagination from "./_components/Pagination";
-import { checkRateLimit, fetchIssues as fetchIssuesFromDB } from "./issues";
 import type { NextPage } from "next";
 import { Issue } from "~~/types/issue/issue";
 import { FilterValues, IssueMetadataCounts } from "~~/types/utils";
-import { getTotalClicks } from "~~/utils/clickedLinks";
 import { ITEMS_PER_PAGE } from "~~/utils/const";
 import { getFilterCounts, getIssues } from "~~/utils/getIssues";
 
@@ -98,21 +96,12 @@ const Home: NextPage = () => {
     <>
       <div className="p-6 font-sans">
         <div className="flex items-center flex-col">
-          <button className="btn btn-primary" onClick={() => fetchIssuesFromDB()}>
+          {/* <button className="btn btn-primary" onClick={() => fetchIssuesFromDB()}>
             HI
           </button>
           <button className="btn btn-primary" onClick={() => checkRateLimit()}>
             Rate limit
           </button>
-          {/* <button
-            className="btn btn-primary"
-            onClick={async () => {
-              const res = await getFilterCounts();
-              console.log(res);
-            }}
-          >
-            Get counts
-          </button> */}
           <button
             className="btn btn-primary"
             onClick={async () => {
@@ -121,22 +110,26 @@ const Home: NextPage = () => {
             }}
           >
             Get clickedLinks
-          </button>
+          </button>  */}
         </div>
-        {issueMetadataCounts && (
-          <FilterBar issueMetadataCounts={issueMetadataCounts} handleChange={handleFilterChange} />
-        )}
-        {isLoading ? (
-          <div className="flex justify-center mt-10">
-            <span className="loading loading-spinner loading-lg "></span>
+        <div className="flex flex-col lg:flex-row">
+          <div className="lg:fixed lg:ml-4 lg:top-20 lg:left-0 lg:h-screen lg:w-96 lg:flex-shrink-0">
+            {issueMetadataCounts && (
+              <FilterBar issueMetadataCounts={issueMetadataCounts} handleChange={handleFilterChange} />
+            )}
           </div>
-        ) : (
-          <div className="space-y-4">
-            {filteredIssues.length > 0 &&
-              filteredIssues.map((issue: Issue, index: number) => <IssueCard key={index} issue={issue} />)}
-            <Pagination currentPage={currentPage} totalPages={totalPages} handlePageChange={handlePageChange} />
-          </div>
-        )}
+          {isLoading ? (
+            <div className="lg:ml-96 mt-10 w-full flex justify-center">
+              <span className="loading loading-spinner loading-lg"></span>
+            </div>
+          ) : (
+            <div className="lg:ml-96 h-screen space-y-4 w-full">
+              {filteredIssues.length > 0 &&
+                filteredIssues.map((issue: Issue, index: number) => <IssueCard key={index} issue={issue} />)}
+              <Pagination currentPage={currentPage} totalPages={totalPages} handlePageChange={handlePageChange} />
+            </div>
+          )}
+        </div>
       </div>
     </>
   );

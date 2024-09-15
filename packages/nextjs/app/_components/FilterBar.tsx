@@ -9,7 +9,7 @@ interface FilterBarProps {
 const FilterBar: React.FC<FilterBarProps> = ({ issueMetadataCounts, handleChange }) => {
   return (
     <>
-      <div className="mb-6">
+      <div className="mb-6 p-2">
         <h2 className="text-lg font-semibold mb-4">Filters</h2>
         <div className="space-y-2">
           <SelectDropdown
@@ -39,12 +39,12 @@ const FilterBar: React.FC<FilterBarProps> = ({ issueMetadataCounts, handleChange
         </div>
       </div>
 
-      <div className="mb-6">
+      {/* <div className="mb-6">
         <h2 className="text-lg font-semibold mb-4">Sort</h2>
         <select className="w-full p-2 border rounded">
           <option>Sort by</option>
         </select>
-      </div>
+      </div> */}
     </>
   );
 };
