@@ -153,7 +153,7 @@ export async function fetchIssues() {
         const newIssue = new Issue({
           number: issue.number,
           title: issue.title,
-          assignee: issue.assignee?.login,
+          assignee: issue.assignee?.login || "",
           createdAt: new Date(issue.created_at),
           updatedAt: new Date(issue.updated_at),
           state: issue.state,

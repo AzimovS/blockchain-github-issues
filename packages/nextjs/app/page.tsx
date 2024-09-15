@@ -7,15 +7,9 @@ import Pagination from "./_components/Pagination";
 import { checkRateLimit, fetchIssues as fetchIssuesFromDB } from "./issues";
 import type { NextPage } from "next";
 import { Issue } from "~~/types/issue/issue";
-import { IssueMetadataCounts } from "~~/types/utils";
+import { FilterValues, IssueMetadataCounts } from "~~/types/utils";
 import { ITEMS_PER_PAGE } from "~~/utils/const";
 import { getFilterCounts, getIssues } from "~~/utils/getIssues";
-
-interface FilterValues {
-  languages: string;
-  labels: string;
-  noAssignee: boolean;
-}
 
 const Home: NextPage = () => {
   // const [issues, setIssues] = useState<Issue[]>([]);
@@ -49,12 +43,13 @@ const Home: NextPage = () => {
   };
 
   const fetchIssues = async (page: number, getTotalPages: boolean) => {
-    const issuesData = await getIssues({ page: page - 1 });
+    const issuesData = await getIssues({ page: page - 1, filterValues });
     // setIssues(issuesData?.latestIssues);
     setFilteredIssues(issuesData?.latestIssues);
     if (getTotalPages) {
       setTotalPages(Math.ceil(issuesData?.totalItems / ITEMS_PER_PAGE));
     }
+    console.log(issuesData);
   };
 
   useEffect(() => {
@@ -66,7 +61,7 @@ const Home: NextPage = () => {
 
   useEffect(() => {
     setIsLoading(true);
-    fetchIssues(currentPage, false);
+    fetchIssues(currentPage, currentPage === 1);
     setIsLoading(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPage]);
@@ -74,6 +69,11 @@ const Home: NextPage = () => {
   useEffect(() => {
     setIsLoading(true);
     fetchFiltersCounts(filterValues);
+    if (currentPage !== 1) {
+      setCurrentPage(1);
+    } else {
+      fetchIssues(currentPage, true);
+    }
     setIsLoading(false);
     console.log(filterValues);
     console.log(filteredIssues);

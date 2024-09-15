@@ -16,3 +16,9 @@ export type IssueMetadataCounts = {
   labelCount: CountResult[];
   languageCount: CountResult[];
 };
+
+export type FilterValues = {
+  languages: string;
+  labels: string;
+  noAssignee: boolean;
+};

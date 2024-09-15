@@ -3,28 +3,30 @@
 import { ITEMS_PER_PAGE } from "./const";
 import connectdb from "~~/lib/db";
 import Issue from "~~/lib/models/Issue";
+import { FilterValues } from "~~/types/utils";
 
-export async function getIssues({ page = 0 }: { page: number }) {
+export async function getIssues({ page = 0, filterValues }: { page: number; filterValues?: FilterValues }) {
   await connectdb();
   const latestIssue = await Issue.findOne().sort({ savedAt: -1 }).exec();
-  const latestIssues = await Issue.find({ savedAt: latestIssue?.savedAt })
+  const matchObject = {
+    savedAt: latestIssue?.savedAt,
+    ...(filterValues?.languages && { languages: filterValues?.languages }),
+    ...(filterValues?.labels && { labels: filterValues?.labels }),
+    ...(filterValues?.noAssignee !== undefined && filterValues?.noAssignee && { assignee: "" }),
+  };
+  console.log(matchObject);
+  const latestIssues = await Issue.find(matchObject)
     .sort({ createdAt: -1 })
     .skip(ITEMS_PER_PAGE * page)
     .limit(ITEMS_PER_PAGE);
   let totalItems = 0;
   if (page === 0) {
-    totalItems = await Issue.countDocuments({ savedAt: latestIssue?.savedAt });
+    totalItems = await Issue.countDocuments(matchObject);
   }
   return {
     totalItems,
     latestIssues: JSON.parse(JSON.stringify(latestIssues)),
   };
-}
-
-interface FilterValues {
-  languages: string;
-  labels: string;
-  noAssignee: boolean;
 }
 
 export async function getFilterCounts({ languages, labels, noAssignee }: FilterValues) {
