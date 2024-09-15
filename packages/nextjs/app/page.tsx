@@ -8,6 +8,7 @@ import { checkRateLimit, fetchIssues as fetchIssuesFromDB } from "./issues";
 import type { NextPage } from "next";
 import { Issue } from "~~/types/issue/issue";
 import { FilterValues, IssueMetadataCounts } from "~~/types/utils";
+import { getTotalClicks } from "~~/utils/clickedLinks";
 import { ITEMS_PER_PAGE } from "~~/utils/const";
 import { getFilterCounts, getIssues } from "~~/utils/getIssues";
 
@@ -112,6 +113,15 @@ const Home: NextPage = () => {
           >
             Get counts
           </button> */}
+          <button
+            className="btn btn-primary"
+            onClick={async () => {
+              const res = await getTotalClicks();
+              console.log(res);
+            }}
+          >
+            Get clickedLinks
+          </button>
         </div>
         {issueMetadataCounts && (
           <FilterBar issueMetadataCounts={issueMetadataCounts} handleChange={handleFilterChange} />

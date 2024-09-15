@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Issue } from "~~/types/issue/issue";
+import { createNewLinkClick } from "~~/utils/clickedLinks";
 import { formatTimeDifference } from "~~/utils/helpers";
 
 interface IssueCardProps {
@@ -10,13 +11,27 @@ const IssueCard: React.FC<IssueCardProps> = ({ issue }) => {
   return (
     <div className="p-4 rounded border-2 shadow">
       <h3 className="font-semibold mb-1">
-        <Link href={issue?.htmlUrl} rel="noopener noreferrer" target="_blank">
+        <Link
+          href={issue?.htmlUrl}
+          onClick={() => {
+            createNewLinkClick(issue);
+          }}
+          rel="noopener noreferrer"
+          target="_blank"
+        >
           {issue?.title}
         </Link>
       </h3>
       <p className="text-sm text-gray-600 my-1">
         Repository:{" "}
-        <Link href={issue?.repoUrl} rel="noopener noreferrer" target="_blank">
+        <Link
+          href={issue?.repoUrl}
+          onClick={() => {
+            createNewLinkClick(issue);
+          }}
+          rel="noopener noreferrer"
+          target="_blank"
+        >
           {issue?.org}/{issue?.repoName}
         </Link>
       </p>
