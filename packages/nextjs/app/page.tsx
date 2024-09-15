@@ -12,18 +12,22 @@ import { ITEMS_PER_PAGE } from "~~/utils/const";
 import { getFilterCounts, getIssues } from "~~/utils/getIssues";
 
 interface FilterValues {
-  language: string;
-  label: string;
+  languages: string;
+  labels: string;
+  noAssignee: boolean;
 }
 
 const Home: NextPage = () => {
-  const [issues, setIssues] = useState<Issue[]>([]);
+  // const [issues, setIssues] = useState<Issue[]>([]);
   const [filteredIssues, setFilteredIssues] = useState<Issue[]>([]);
-  const [withoutAssignee, setWithoutAssignee] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(5);
-  const [issueMetadataCounts, setIssueMetadataCounts] = useState<IssueMetadataCounts>();
+  const [filterValues, setFilterValues] = useState<FilterValues>({ languages: "", labels: "", noAssignee: false });
+  const [issueMetadataCounts, setIssueMetadataCounts] = useState<IssueMetadataCounts>({
+    labelCount: [],
+    languageCount: [],
+  });
 
   const handlePageChange = (page: number) => {
     if (page >= 1 && page <= totalPages) {
@@ -31,15 +35,22 @@ const Home: NextPage = () => {
     }
   };
 
-  const fetchFiltersCounts = async () => {
-    const res = await getFilterCounts();
-    console.log(res);
-    setIssueMetadataCounts(res);
+  const fetchFiltersCounts = async (filterVals: FilterValues) => {
+    const res: IssueMetadataCounts = await getFilterCounts(filterVals);
+    if (filterVals?.labels.length === 0 && filterVals?.languages.length === 0) {
+      setIssueMetadataCounts(res);
+    } else if (filterVals?.labels.length !== 0 && filterVals?.languages.length !== 0) {
+      return;
+    } else if (filterVals?.labels.length > 0) {
+      setIssueMetadataCounts(prevValues => ({ ...prevValues, languageCount: res?.languageCount }));
+    } else if (filterVals?.languages.length > 0) {
+      setIssueMetadataCounts(prevValues => ({ ...prevValues, labelCount: res?.labelCount }));
+    }
   };
 
   const fetchIssues = async (page: number, getTotalPages: boolean) => {
     const issuesData = await getIssues({ page: page - 1 });
-    setIssues(issuesData?.latestIssues);
+    // setIssues(issuesData?.latestIssues);
     setFilteredIssues(issuesData?.latestIssues);
     if (getTotalPages) {
       setTotalPages(Math.ceil(issuesData?.totalItems / ITEMS_PER_PAGE));
@@ -49,7 +60,7 @@ const Home: NextPage = () => {
   useEffect(() => {
     fetchIssues(1, true);
     setIsLoading(false);
-    fetchFiltersCounts();
+    fetchFiltersCounts(filterValues);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -60,30 +71,25 @@ const Home: NextPage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPage]);
 
-  const filterValues: FilterValues = { language: "", label: "" };
-
-  const handleChange = (filterKey: string, newVal: string) => {
+  useEffect(() => {
     setIsLoading(true);
-    let filteredIssues = issues;
-    if (filterKey === "assignee") {
-      if (!withoutAssignee) {
-        setWithoutAssignee(true);
-        filteredIssues = issues.filter((issue: Issue) => !issue?.assignee);
-      } else {
-        setWithoutAssignee(false);
-      }
-    } else if (filterKey in filterValues) {
-      filterValues[filterKey as keyof FilterValues] = newVal;
-    }
-    if (filterValues?.language) {
-      filteredIssues = issues.filter((issue: Issue) => issue?.languages?.includes(filterValues?.language));
-    }
-    if (filterValues?.label) {
-      filteredIssues = issues.filter((issue: Issue) => issue?.labels?.includes(filterValues?.label));
-    }
-    setFilteredIssues(filteredIssues);
+    fetchFiltersCounts(filterValues);
+    setIsLoading(false);
+    console.log(filterValues);
     console.log(filteredIssues);
-    console.log(filterValues, withoutAssignee);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filterValues]);
+
+  const handleFilterChange = (filterKey: string, newVal: string) => {
+    setIsLoading(true);
+    if (filterKey === "noAssignee") {
+      setFilterValues(prevValues => ({ ...prevValues, noAssignee: !filterValues?.noAssignee }));
+    } else if (filterKey === "languages") {
+      console.log("languages changed");
+      setFilterValues(prevValues => ({ ...prevValues, languages: newVal }));
+    } else if (filterKey === "labels") {
+      setFilterValues(prevValues => ({ ...prevValues, labels: newVal }));
+    }
     setIsLoading(false);
   };
 
@@ -97,7 +103,7 @@ const Home: NextPage = () => {
           <button className="btn btn-primary" onClick={() => checkRateLimit()}>
             Rate limit
           </button>
-          <button
+          {/* <button
             className="btn btn-primary"
             onClick={async () => {
               const res = await getFilterCounts();
@@ -105,9 +111,11 @@ const Home: NextPage = () => {
             }}
           >
             Get counts
-          </button>
+          </button> */}
         </div>
-        {issueMetadataCounts && <FilterBar issueMetadataCounts={issueMetadataCounts} handleChange={handleChange} />}
+        {issueMetadataCounts && (
+          <FilterBar issueMetadataCounts={issueMetadataCounts} handleChange={handleFilterChange} />
+        )}
         {isLoading ? (
           <div className="flex justify-center mt-10">
             <span className="loading loading-spinner loading-lg "></span>

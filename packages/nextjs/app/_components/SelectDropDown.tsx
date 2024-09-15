@@ -11,11 +11,11 @@ interface SelectDropdownProps {
 const SelectDropdown: React.FC<SelectDropdownProps> = ({ countResult, defaultOption, onChange, curKey }) => {
   const handleSelectChange = (e: ChangeEvent<HTMLSelectElement>) => {
     const { value } = e.target;
-    console.log(curKey, value);
+    // console.log(curKey, value);
     onChange(curKey, value);
   };
 
-  console.log(countResult);
+  // console.log(countResult);
 
   return (
     <div className="flex flex-col space-y-2">

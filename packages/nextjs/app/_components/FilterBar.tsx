@@ -15,13 +15,13 @@ const FilterBar: React.FC<FilterBarProps> = ({ issueMetadataCounts, handleChange
           <SelectDropdown
             countResult={issueMetadataCounts?.languageCount}
             defaultOption={"Select Repository Programming Language"}
-            curKey={"language"}
+            curKey={"languages"}
             onChange={handleChange}
           />
           <SelectDropdown
             countResult={issueMetadataCounts?.labelCount}
             defaultOption={"Select Issue Label"}
-            curKey={"label"}
+            curKey={"labels"}
             onChange={handleChange}
           />
         </div>
@@ -31,7 +31,7 @@ const FilterBar: React.FC<FilterBarProps> = ({ issueMetadataCounts, handleChange
               type="checkbox"
               className="mr-2"
               onClick={() => {
-                handleChange("assignee", "");
+                handleChange("noAssignee", "");
               }}
             />
             <span className="text-sm">Only show issues with no assignee</span>

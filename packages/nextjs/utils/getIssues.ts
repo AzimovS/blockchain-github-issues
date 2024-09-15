@@ -21,12 +21,25 @@ export async function getIssues({ page = 0 }: { page: number }) {
   };
 }
 
-export async function getFilterCounts() {
+interface FilterValues {
+  languages: string;
+  labels: string;
+  noAssignee: boolean;
+}
+
+export async function getFilterCounts({ languages, labels, noAssignee }: FilterValues) {
   try {
     const latestIssue = await Issue.findOne().sort({ savedAt: -1 }).exec();
+    const matchObject = {
+      savedAt: latestIssue?.savedAt,
+      ...(languages && { languages }),
+      ...(labels && { labels }),
+      ...(noAssignee !== undefined && noAssignee && { assignee: { $exists: true, $not: { $size: 0 } } }),
+    };
+    // console.log(matchObject, { languages, labels, noAssignee });
     const result = await Issue.aggregate([
       {
-        $match: { savedAt: latestIssue?.savedAt },
+        $match: matchObject,
       },
       {
         $facet: {
