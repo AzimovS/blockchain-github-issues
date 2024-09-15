@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { fetchIssues } from "~~/app/issues";
+import connectdb from "~~/lib/db";
 import Issue from "~~/lib/models/Issue";
 
 function MoreThanOneHour(inputDate: Date): boolean {
@@ -11,6 +12,7 @@ function MoreThanOneHour(inputDate: Date): boolean {
 }
 
 export const GET = async () => {
+  await connectdb();
   const latestIssue = await Issue.findOne().sort({ savedAt: -1 }).exec();
   if (MoreThanOneHour(latestIssue?.savedAt)) {
     fetchIssues();
