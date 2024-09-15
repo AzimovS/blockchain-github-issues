@@ -4,11 +4,12 @@ import { useEffect, useState } from "react";
 import FilterBar from "./_components/FilterBar";
 import IssueCard from "./_components/IssueCard";
 import Pagination from "./_components/Pagination";
-import { checkRateLimit, fetchIssuesFromOrgs } from "./issues";
+import { checkRateLimit, fetchIssues as fetchIssuesFromDB } from "./issues";
 import type { NextPage } from "next";
 import { Issue } from "~~/types/issue/issue";
+import { IssueMetadataCounts } from "~~/types/utils";
 import { ITEMS_PER_PAGE } from "~~/utils/const";
-import { getIssues } from "~~/utils/getIssues";
+import { getFilterCounts, getIssues } from "~~/utils/getIssues";
 
 interface FilterValues {
   language: string;
@@ -22,11 +23,18 @@ const Home: NextPage = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(5);
+  const [issueMetadataCounts, setIssueMetadataCounts] = useState<IssueMetadataCounts>();
 
   const handlePageChange = (page: number) => {
     if (page >= 1 && page <= totalPages) {
       setCurrentPage(page);
     }
+  };
+
+  const fetchFiltersCounts = async () => {
+    const res = await getFilterCounts();
+    console.log(res);
+    setIssueMetadataCounts(res);
   };
 
   const fetchIssues = async (page: number, getTotalPages: boolean) => {
@@ -41,6 +49,7 @@ const Home: NextPage = () => {
   useEffect(() => {
     fetchIssues(1, true);
     setIsLoading(false);
+    fetchFiltersCounts();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -82,14 +91,23 @@ const Home: NextPage = () => {
     <>
       <div className="p-6 font-sans">
         <div className="flex items-center flex-col">
-          <button className="btn btn-primary" onClick={() => fetchIssuesFromOrgs()}>
+          <button className="btn btn-primary" onClick={() => fetchIssuesFromDB()}>
             HI
           </button>
           <button className="btn btn-primary" onClick={() => checkRateLimit()}>
             Rate limit
           </button>
+          <button
+            className="btn btn-primary"
+            onClick={async () => {
+              const res = await getFilterCounts();
+              console.log(res);
+            }}
+          >
+            Get counts
+          </button>
         </div>
-        <FilterBar issues={issues} handleChange={handleChange} />
+        {issueMetadataCounts && <FilterBar issueMetadataCounts={issueMetadataCounts} handleChange={handleChange} />}
         {isLoading ? (
           <div className="flex justify-center mt-10">
             <span className="loading loading-spinner loading-lg "></span>

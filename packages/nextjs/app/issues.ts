@@ -136,7 +136,7 @@ async function getIssues(repoFullName: string) {
 }
 
 // Main function to iterate over organizations and fetch repositories and issues
-export async function fetchIssuesFromOrgs() {
+export async function fetchIssues() {
   const currentDate = new Date();
 
   for (const repo of repos) {

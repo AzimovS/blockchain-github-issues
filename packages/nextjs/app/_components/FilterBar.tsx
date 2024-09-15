@@ -1,26 +1,25 @@
 import SelectDropdown from "./SelectDropDown";
-import { Issue } from "~~/types/issue/issue";
-import { getLabelCounts, getLanguageCounts } from "~~/utils/helpers";
+import { IssueMetadataCounts } from "~~/types/utils";
 
 interface FilterBarProps {
-  issues: Issue[];
+  issueMetadataCounts: IssueMetadataCounts;
   handleChange: (newKey: string, newVal: string) => void;
 }
 
-const FilterBar: React.FC<FilterBarProps> = ({ issues, handleChange }) => {
+const FilterBar: React.FC<FilterBarProps> = ({ issueMetadataCounts, handleChange }) => {
   return (
     <>
       <div className="mb-6">
         <h2 className="text-lg font-semibold mb-4">Filters</h2>
         <div className="space-y-2">
           <SelectDropdown
-            filterOptions={getLanguageCounts(issues)}
+            countResult={issueMetadataCounts?.languageCount}
             defaultOption={"Select Repository Programming Language"}
             curKey={"language"}
             onChange={handleChange}
           />
           <SelectDropdown
-            filterOptions={getLabelCounts(issues)}
+            countResult={issueMetadataCounts?.labelCount}
             defaultOption={"Select Issue Label"}
             curKey={"label"}
             onChange={handleChange}

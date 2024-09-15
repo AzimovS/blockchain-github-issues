@@ -1,19 +1,21 @@
 import React, { ChangeEvent } from "react";
-import { FilterOption } from "~~/types/utils";
+import { CountResult } from "~~/types/utils";
 
 interface SelectDropdownProps {
-  filterOptions: FilterOption[];
+  countResult: CountResult[];
   defaultOption: string;
   curKey: string;
   onChange: (newKey: string, newVal: string) => void;
 }
 
-const SelectDropdown: React.FC<SelectDropdownProps> = ({ filterOptions, defaultOption, onChange, curKey }) => {
+const SelectDropdown: React.FC<SelectDropdownProps> = ({ countResult, defaultOption, onChange, curKey }) => {
   const handleSelectChange = (e: ChangeEvent<HTMLSelectElement>) => {
     const { value } = e.target;
     console.log(curKey, value);
     onChange(curKey, value);
   };
+
+  console.log(countResult);
 
   return (
     <div className="flex flex-col space-y-2">
@@ -25,9 +27,9 @@ const SelectDropdown: React.FC<SelectDropdownProps> = ({ filterOptions, defaultO
         <option key="defaultOption" value="">
           {defaultOption}
         </option>
-        {filterOptions.map(({ label, count }) => (
-          <option key={label} value={label}>
-            {label} ({count})
+        {countResult?.map(({ _id, count }) => (
+          <option key={_id} value={_id}>
+            {_id} ({count})
           </option>
         ))}
       </select>
