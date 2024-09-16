@@ -113,7 +113,7 @@ const Home: NextPage = () => {
           </button>  */}
         </div>
         <div className="flex flex-col lg:flex-row">
-          <div className="lg:fixed lg:ml-4 lg:top-20 lg:left-0 lg:h-screen lg:w-96 lg:flex-shrink-0">
+          <div className="lg:fixed lg:ml-4 lg:top-20 lg:left-0 lg:h-auto lg:w-96 lg:flex-shrink-0">
             {issueMetadataCounts && (
               <FilterBar issueMetadataCounts={issueMetadataCounts} handleChange={handleFilterChange} />
             )}
@@ -123,7 +123,7 @@ const Home: NextPage = () => {
               <span className="loading loading-spinner loading-lg"></span>
             </div>
           ) : (
-            <div className="lg:ml-96 h-screen space-y-4 w-full">
+            <div className="lg:ml-96 space-y-4 w-full">
               {filteredIssues.length > 0 &&
                 filteredIssues.map((issue: Issue, index: number) => <IssueCard key={index} issue={issue} />)}
               <Pagination currentPage={currentPage} totalPages={totalPages} handlePageChange={handlePageChange} />
