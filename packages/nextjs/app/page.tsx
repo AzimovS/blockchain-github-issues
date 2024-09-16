@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import FilterBar from "./_components/FilterBar";
 import IssueCard from "./_components/IssueCard";
 import Pagination from "./_components/Pagination";
@@ -124,9 +124,17 @@ const Home: NextPage = () => {
             </div>
           ) : (
             <div className="lg:ml-96 space-y-4 w-full">
-              {filteredIssues.length > 0 &&
-                filteredIssues.map((issue: Issue, index: number) => <IssueCard key={index} issue={issue} />)}
-              <Pagination currentPage={currentPage} totalPages={totalPages} handlePageChange={handlePageChange} />
+              <Suspense
+                fallback={
+                  <div className="lg:ml-96 mt-10 w-full flex justify-center">
+                    <span className="loading loading-spinner loading-lg"></span>
+                  </div>
+                }
+              >
+                {filteredIssues.length > 0 &&
+                  filteredIssues.map((issue: Issue, index: number) => <IssueCard key={index} issue={issue} />)}
+                <Pagination currentPage={currentPage} totalPages={totalPages} handlePageChange={handlePageChange} />
+              </Suspense>
             </div>
           )}
         </div>
