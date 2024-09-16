@@ -4,7 +4,9 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import github from "../public/github.png";
 import ClickCount from "./ClickCount";
+import { ArrowUpOnSquareIcon, InformationCircleIcon } from "@heroicons/react/24/outline";
 
 type HeaderMenuLink = {
   label: string;
@@ -97,6 +99,20 @@ export const Header = () => {
       <div className="navbar-end flex-grow mr-4">
         {/* <RainbowKitCustomConnectButton />
         <FaucetButton /> */}
+        <div className="relative inline-flex items-center">
+          <div className="group mr-2 cursor-pointer">
+            <Image src={github.src} width={25} height={25} alt="Github Logo" />
+            <div className="absolute top-0 right-0 hidden group-hover:block mt-10 ml-0 w-24 max-w-sm px-4 py-2 bg-white border border-gray-200 rounded-lg shadow-lg">
+              <p className="text-sm text-gray-700">Soon</p>
+            </div>
+          </div>
+        </div>
+        <Link href={"/about"}>
+          <InformationCircleIcon className="mr-2 w-8 h-8 text-gray-500" />
+        </Link>
+        <Link href={"https://forms.gle/1F5LbgVUt4aEcJ9o7"} rel="noopener noreferrer" target="_blank">
+          <ArrowUpOnSquareIcon className="mr-2 w-7 h-7 text-gray-500" />
+        </Link>
         <ClickCount />
       </div>
     </div>
