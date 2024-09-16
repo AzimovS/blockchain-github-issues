@@ -15,7 +15,7 @@ export const GET = async () => {
   await connectdb();
   const latestIssue = await Issue.findOne().sort({ savedAt: -1 }).exec();
   if (MoreThanOneHour(latestIssue?.savedAt)) {
-    fetchIssues();
+    await fetchIssues();
     return NextResponse.json({ message: "Successfully fetched" });
   }
   return NextResponse.json({ message: "The last fetch was less than one hour" });
