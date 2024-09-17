@@ -2,84 +2,7 @@
 
 import connectdb from "~~/lib/db";
 import Issue from "~~/lib/models/Issue";
-
-const repos = [
-  "0xPARC/circom-ecdsa",
-  "0xPARC/plonkathon",
-  "0xPARC/zkrepl",
-  "BuidlGuidl/SpeedRunEthereum",
-  "Certora/tutorials-code",
-  "Commit-Boost/commit-boost-client",
-  "Consensys/gnark-crypto",
-  "Consensys/vscode-solidity-auditor",
-  "Consensys/web3signer",
-  "DefiLlama/defillama-app",
-  "DefiLlama/defillama-server",
-  "GNSPS/solidity-bytes-utils",
-  "HarryR/solcrypto",
-  "LedgerHQ/ledger-live",
-  // "MetaMask/metamask-extension",
-  // "NomicFoundation/hardhat",
-  "OffchainLabs/nitro",
-  // "OpenZeppelin/openzeppelin-contracts",
-  "OpenZeppelin/openzeppelin-contracts-upgradeable",
-  "Tenderly/tenderly-sdk",
-  "Uniswap/v4-core",
-  "Vectorized/solady",
-  "WalletConnect/walletconnect-monorepo",
-  "WalletConnect/web3modal",
-  "attestantio/go-eth2-client",
-  "axiom-crypto/halo2-lib",
-  "benjaminion/upgrading-ethereum-book",
-  "bluealloy/revm",
-  "celestiaorg/celestia-core",
-  "compound-finance/compound-protocol",
-  "cosmos/cosmos-sdk",
-  "dapphub/ds-test",
-  "dappnode/DAppNode",
-  "duneanalytics/spellbook",
-  "eth-clients/goerli",
-  "ethereum-attestation-service/eas-sdk",
-  // "ethereum-optimism/optimism",
-  // "ethereum/remix-project",
-  // "ethereum/solidity",
-  "ethereumjs/ethereumjs-monorepo",
-  // "ethers-io/ethers.js",
-  "flashbots/mev-boost",
-  "flashbots/relayscan",
-  "foundry-rs/forge-std",
-  // "foundry-rs/foundry",
-  "gobitfly/eth2-beaconchain-explorer",
-  // "graphprotocol/graph-node",
-  "graphprotocol/indexer",
-  "impersonator-eth/impersonator",
-  "ingonyama-zk/icicle",
-  // "juanfranblanco/vscode-solidity",
-  "l2beat/l2beat",
-  "libp2p/libp2p",
-  "lidofinance/lido-dao",
-  "matter-labs/zksync-era",
-  "privacy-scaling-explorations/perpetualpowersoftau",
-  "protolambda/go-kzg",
-  // "risc0/risc0",
-  "rocket-pool/rocketpool",
-  "sablier-labs/v2-core",
-  "safe-global/safe-singleton-factory",
-  "safe-global/safe-smart-account",
-  "succinctlabs/eigenlayer-beacon-oracle",
-  "ultrasoundmoney/frontend",
-  "vittominacori/solidity-linked-list",
-  // "vyperlang/vyper",
-  "wealdtech/go-merkletree",
-  // "web3/web3.js",
-  "wevm/viem",
-  "wevm/wagmi",
-  "zama-ai/concrete",
-  "zama-ai/tfhe-rs",
-  "zk-passport/openpassport",
-  "zkemail/zk-email-verify",
-  "zkp2p/zk-p2p",
-];
+import { REPOS } from "~~/utils/const";
 
 const GITHUB_API_BASE_URL = "https://api.github.com";
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
@@ -139,7 +62,7 @@ async function getIssues(repoFullName: string) {
 export async function fetchIssues() {
   const currentDate = new Date();
 
-  for (const repo of repos) {
+  for (const repo of REPOS) {
     try {
       const repoInfo = await fetchRepoInfo(repo);
       const issues = await getIssues(repo);
