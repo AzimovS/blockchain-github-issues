@@ -1,8 +1,9 @@
 "use client";
 
-import { Suspense, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import FilterBar from "./_components/FilterBar";
 import IssueCard from "./_components/IssueCard";
+import IssueCardSkeleton from "./_components/IssueCardSkeleton";
 import Pagination from "./_components/Pagination";
 import type { NextPage } from "next";
 import { Issue } from "~~/types/issue/issue";
@@ -41,14 +42,13 @@ const Home: NextPage = () => {
     }
   };
 
-  const fetchIssues = async (page: number, getTotalPages: boolean) => {
+  const fetchIssues = async (page: number, updateTotalPages: boolean) => {
     const issuesData = await getIssues({ page: page - 1, filterValues });
     // setIssues(issuesData?.latestIssues);
     setFilteredIssues(issuesData?.latestIssues);
-    if (getTotalPages) {
+    if (updateTotalPages) {
       setTotalPages(Math.ceil(issuesData?.totalItems / ITEMS_PER_PAGE));
     }
-    console.log(issuesData);
   };
 
   useEffect(() => {
@@ -74,8 +74,6 @@ const Home: NextPage = () => {
       fetchIssues(currentPage, true);
     }
     setIsLoading(false);
-    console.log(filterValues);
-    console.log(filteredIssues);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filterValues]);
 
@@ -118,25 +116,21 @@ const Home: NextPage = () => {
               <FilterBar issueMetadataCounts={issueMetadataCounts} handleChange={handleFilterChange} />
             )}
           </div>
-          {isLoading ? (
-            <div className="lg:ml-96 mt-10 w-full flex justify-center">
-              <span className="loading loading-spinner loading-lg"></span>
-            </div>
-          ) : (
-            <div className="lg:ml-96 space-y-4 w-full">
-              <Suspense
-                fallback={
-                  <div className="lg:ml-96 mt-10 w-full flex justify-center">
-                    <span className="loading loading-spinner loading-lg"></span>
-                  </div>
-                }
-              >
+          <div className="lg:ml-96 space-y-4 w-full">
+            {filteredIssues.length === 0 || isLoading ? (
+              <>
+                {Array.from({ length: 5 }).map((_, index) => (
+                  <IssueCardSkeleton key={index} />
+                ))}
+              </>
+            ) : (
+              <>
                 {filteredIssues.length > 0 &&
                   filteredIssues.map((issue: Issue, index: number) => <IssueCard key={index} issue={issue} />)}
                 <Pagination currentPage={currentPage} totalPages={totalPages} handlePageChange={handlePageChange} />
-              </Suspense>
-            </div>
-          )}
+              </>
+            )}
+          </div>
         </div>
       </div>
     </>
