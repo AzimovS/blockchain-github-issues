@@ -14,6 +14,7 @@ Whether you're a developer, contributor, or enthusiast, our platform helps you s
 2. [Features](#features)
 3. [Contributing](#contributing)
 4. [License](#license)
+5. [Credits](#credits)
 
 ## Installation
 [Soon]
@@ -23,7 +24,8 @@ Whether you're a developer, contributor, or enthusiast, our platform helps you s
 - Built with Next.js for optimal performance.
 - Styled with TailwindCSS and DaisyUI for a modern, responsive design.
 - Utilizes GitHub API to fetch issues.
-- Utilizes MongoDB to save the issues and clickcounts
+- Currently tracking more than 70 GitHub Blockchain related repositories.
+- Utilizes MongoDB to save the issues and clickcounts.
 
 ## Contributing
 
@@ -32,3 +34,6 @@ We welcome contributions. For more details, please refer to the [CONTRIBUTING.md
 ## License
 
 This project is licensed under the terms specified in the [LICENCE.md](LICENCE.md) file.
+
+## Credits
+- Inspired by [Good First Issues](https://github.com/iedr/goodfirstissues) and [Good First Issue](https://github.com/DeepSourceCorp/good-first-issue)
