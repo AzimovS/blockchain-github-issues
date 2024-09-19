@@ -101,10 +101,13 @@ export const Header = () => {
         <FaucetButton /> */}
         <div className="relative inline-flex items-center">
           <div className="group mr-2 cursor-pointer">
-            <Image src={github.src} width={25} height={25} alt="Github Logo" />
-            <div className="absolute top-0 right-0 hidden group-hover:block mt-10 ml-0 w-24 max-w-sm px-4 py-2 bg-white border border-gray-200 rounded-lg shadow-lg">
-              <p className="text-sm text-gray-700">Soon</p>
-            </div>
+            <Link
+              href={"https://github.com/AzimovS/blockchain-github-issues"}
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              <Image src={github.src} width={25} height={25} alt="Github Logo" />
+            </Link>
           </div>
         </div>
         <Link href={"/about"}>
